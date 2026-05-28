@@ -38,18 +38,14 @@ from imblearn.over_sampling import SMOTE
 import os
 
 # Descobre o diretório raiz do projeto (um nível acima de src)
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))  # .../ML_Project/src
-PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)               # .../ML_Project
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)   
 
 # Define o caminho para os dados
 RANDOM_STATE  = 42
 TRAIN_RATIO   = 0.8
 DATA_PATH = os.path.join(PROJECT_ROOT, 'data', 'creditcard_part_*.csv')
 OUTPUT_PATH = os.path.join(PROJECT_ROOT, 'outputs')
-
-# Remove a linha antiga:
-# DATA_PATH = '../data/creditcard_part_*.csv'
-
 
 # ─────────────────────────────────────────────
 # 1. CARREGAMENTO DOS DADOS
@@ -153,7 +149,6 @@ def preprocessar(df_train, df_test):
     print()
 
     return X_train, y_train, X_test, y_test
-
 
 # ─────────────────────────────────────────────
 # 4. SMOTE — BALANCEAMENTO
