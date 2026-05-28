@@ -1,8 +1,4 @@
-"""
-Detecção de Fraudes em Transações Digitais
-Projecto Final — Machine Learning
-Dataset: Credit Card Fraud Detection (Kaggle)
-"""
+
 
 import os
 import glob
@@ -21,7 +17,7 @@ from sklearn.metrics import (
     confusion_matrix,
     roc_auc_score,
     roc_curve,
-    precision_recall_curve,
+    #precision_recall_curve,
     average_precision_score,
     f1_score,
     precision_score,
@@ -65,7 +61,7 @@ def carregar_dados(path, train_ratio):
     df_test  = pd.concat([pd.read_csv(f) for f in teste_files],  ignore_index=True)
 
     print('=' * 55)
-    print('📂 CARREGAMENTO DOS DADOS')
+    print('CARREGAMENTO DOS DADOS')
     print('=' * 55)
     print(f'Total de chunks : {len(ficheiros)}')
     print(f'Chunks treino   : {len(treino_files)} → {df_train.shape[0]:,} linhas')
@@ -81,7 +77,7 @@ def carregar_dados(path, train_ratio):
 # ─────────────────────────────────────────────
 def eda(df_train):
     print('=' * 55)
-    print('📊 ANÁLISE EXPLORATÓRIA')
+    print('ANÁLISE EXPLORATÓRIA')
     print('=' * 55)
 
     os.makedirs(OUTPUT_PATH, exist_ok=True)
@@ -121,7 +117,7 @@ def eda(df_train):
     plt.tight_layout()
     plt.savefig(f'{OUTPUT_PATH}/eda_geral.png', dpi=150, bbox_inches='tight')
     plt.show()
-    print('✅ Gráfico EDA guardado em outputs/eda_geral.png\n')
+    print('Gráfico EDA guardado em outputs/eda_geral.png\n')
 
 
 # ─────────────────────────────────────────────
@@ -129,7 +125,7 @@ def eda(df_train):
 # ─────────────────────────────────────────────
 def preprocessar(df_train, df_test):
     print('=' * 55)
-    print('⚙️  PRÉ-PROCESSAMENTO')
+    print('PRÉ-PROCESSAMENTO')
     print('=' * 55)
 
     scaler = StandardScaler()
@@ -155,7 +151,7 @@ def preprocessar(df_train, df_test):
 # ─────────────────────────────────────────────
 def aplicar_smote(X_train, y_train):
     print('=' * 55)
-    print('⚖️  SMOTE — BALANCEAMENTO DE CLASSES')
+    print('SMOTE — BALANCEAMENTO DE CLASSES')
     print('=' * 55)
     print(f'Antes  → Legítimas: {(y_train==0).sum():,} | Fraudes: {(y_train==1).sum():,}')
 
@@ -173,7 +169,7 @@ def aplicar_smote(X_train, y_train):
 # ─────────────────────────────────────────────
 def treinar_modelos(X_train_res, y_train_res, X_test, y_test):
     print('=' * 55)
-    print('🚀 TREINO DOS MODELOS')
+    print('TREINO DOS MODELOS')
     print('=' * 55)
 
     modelos = {
@@ -194,7 +190,7 @@ def treinar_modelos(X_train_res, y_train_res, X_test, y_test):
     resultados = {}
 
     for nome, modelo in modelos.items():
-        print(f'  ⏳ {nome}...', end=' ', flush=True)
+        print(f' {nome}...', end=' ', flush=True)
         modelo.fit(X_train_res, y_train_res)
 
         y_pred = modelo.predict(X_test)
@@ -210,7 +206,7 @@ def treinar_modelos(X_train_res, y_train_res, X_test, y_test):
             'recall'   : recall_score(y_test, y_pred),
             'avg_prec' : average_precision_score(y_test, y_prob),
         }
-        print(f'✅ ROC-AUC = {resultados[nome]["roc_auc"]:.4f}')
+        print(f'ROC-AUC = {resultados[nome]["roc_auc"]:.4f}')
 
     print()
     return resultados
@@ -221,7 +217,7 @@ def treinar_modelos(X_train_res, y_train_res, X_test, y_test):
 # ─────────────────────────────────────────────
 def avaliar(resultados, y_test, X_train):
     print('=' * 55)
-    print('📋 RELATÓRIOS DE CLASSIFICAÇÃO')
+    print('RELATÓRIOS DE CLASSIFICAÇÃO')
     print('=' * 55)
 
     for nome, res in resultados.items():
@@ -246,13 +242,13 @@ def avaliar(resultados, y_test, X_train):
     ]).set_index('Modelo')
 
     print('=' * 70)
-    print('📊 TABELA COMPARATIVA')
+    print('TABELA COMPARATIVA')
     print('=' * 70)
     print(tabela.to_string())
     print()
 
     melhor = tabela['ROC-AUC'].idxmax()
-    print(f'🏆 Melhor modelo por ROC-AUC: {melhor} ({tabela.loc[melhor, "ROC-AUC"]})')
+    print(f'Melhor modelo por ROC-AUC: {melhor} ({tabela.loc[melhor, "ROC-AUC"]})')
     print()
 
     # Matrizes de confusão
@@ -300,7 +296,7 @@ def avaliar(resultados, y_test, X_train):
     plt.savefig(f'{OUTPUT_PATH}/feature_importance.png', dpi=150, bbox_inches='tight')
     plt.show()
 
-    print('✅ Todos os gráficos guardados em outputs/')
+    print('Todos os gráficos guardados em outputs/')
 
 
 # ─────────────────────────────────────────────
