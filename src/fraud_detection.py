@@ -33,16 +33,22 @@ from xgboost import XGBClassifier
 from imblearn.over_sampling import SMOTE
 
 # ─────────────────────────────────────────────
-# CONFIGURAÇÕES
+# CONFIGURAÇÕES DE PATH (AUTOMÁTICO)
 # ─────────────────────────────────────────────
-RANDOM_STATE  = 42
-DATA_PATH     = 'creditcard_part_*.csv'
-OUTPUT_PATH   = '../outputs'
-TRAIN_RATIO   = 0.8   # 80% dos chunks para treino
+import os
 
-os.makedirs(OUTPUT_PATH, exist_ok=True)
-plt.style.use('seaborn-v0_8-darkgrid')
-random.seed(RANDOM_STATE)
+# Descobre o diretório raiz do projeto (um nível acima de src)
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))  # .../ML_Project/src
+PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)               # .../ML_Project
+
+# Define o caminho para os dados
+RANDOM_STATE  = 42
+TRAIN_RATIO   = 0.8
+DATA_PATH = os.path.join(PROJECT_ROOT, 'data', 'creditcard_part_*.csv')
+OUTPUT_PATH = os.path.join(PROJECT_ROOT, 'outputs')
+
+# Remove a linha antiga:
+# DATA_PATH = '../data/creditcard_part_*.csv'
 
 
 # ─────────────────────────────────────────────
@@ -81,6 +87,8 @@ def eda(df_train):
     print('=' * 55)
     print('📊 ANÁLISE EXPLORATÓRIA')
     print('=' * 55)
+
+    os.makedirs(OUTPUT_PATH, exist_ok=True)
 
     counts = df_train['Class'].value_counts()
     pct    = counts[1] / len(df_train) * 100
@@ -310,3 +318,9 @@ if __name__ == '__main__':
     X_train_res, y_train_res  = aplicar_smote(X_train, y_train)
     resultados                = treinar_modelos(X_train_res, y_train_res, X_test, y_test)
     avaliar(resultados, y_test, X_train)
+
+fraudes = df_train[df_train['Class'] == 1]['Amount']
+print(f"Valores mínimos: {fraudes.min()}")
+print(f"Valores máximos: {fraudes.max()}")
+print(f"Média: {fraudes.mean():.2f}")
+
